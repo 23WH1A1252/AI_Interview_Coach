@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Driven Interview Coach | Performance Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { 
+            --neon-purple: #6c63ff; 
+            --neon-cyan: #00f2ff; 
+            --dark-card: #1a1a2e; 
+            --stop-red: #ff4d4d;
+            --text-dim: #a0a0c0;
+        }
+        
+        body { 
+            background: #0f0f1b; 
+            color: white; 
+            font-family: 'DM Sans', sans-serif; 
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Navbar Branding */
+        .navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 15px 40px; 
+            background: var(--dark-card); 
+            border-bottom: 2px solid var(--neon-purple); 
+        }
+
+        .brand {
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -1px;
+        }
+
+        /* Tabs */
+        .tab-container { 
+            display: flex; 
+            gap: 20px; 
+            padding: 20px; 
+            justify-content: center; 
+        }
+
+        .tab-btn { 
+            background: transparent; 
+            border: 1px solid var(--neon-cyan); 
+            color: var(--neon-cyan); 
+            padding: 10px 25px; 
+            border-radius: 30px; 
+            cursor: pointer; 
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .tab-btn.active { 
+            background: var(--neon-cyan); 
+            color: black; 
+        }
+
+        /* Layout Sections */
+        .content-section { 
+            display: none; 
+            padding: 20px; 
+            max-width: 900px; 
+            margin: auto; 
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section.active { display: block; }
+
+        .glass-card { 
+            background: var(--dark-card); 
+            padding: 40px; 
+            border-radius: 24px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            text-align: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Interview Elements */
+        #webcam { 
+            width: 100%; 
+            max-width: 500px;
+            border-radius: 15px; 
+            border: 3px solid var(--neon-purple); 
+            margin: 20px 0; 
+            display: none; 
+            transform: scaleX(-1);
+        }
+
+        .transcript-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            min-height: 60px;
+            border-left: 4px solid var(--neon-cyan);
+            text-align: left;
+        }
+
+        .btn-action { 
+            background: var(--neon-purple); 
+            color: white; 
+            border: none; 
+            padding: 15px 35px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-size: 1.1em; 
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-action:hover { transform: scale(1.05); filter: brightness(1.2); }
+
+        .btn-stop-active { background: var(--stop-red) !important; }
+
+        .logout-btn { 
+            color: #ff4d4d; 
+            text-decoration: none; 
+            font-weight: bold; 
+            border: 1px solid #ff4d4d; 
+            padding: 8px 18px; 
+            border-radius: 8px; 
+        }
+
+        /* Feedback List */
+        #mistakesList {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        #mistakesList li {
+            background: rgba(255, 77, 77, 0.1);
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--stop-red);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="brand">AI Driven <span style="color:var(--neon-cyan)">Interview Coach</span></div>
+        <div>
+            <span style="margin-right:20px; color: var(--neon-cyan);">👤 {{ user }}</span>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="tab-container">
+        <button class="tab-btn active" id="practice-tab" onclick="switchTab('practice')">1. Interview Practice</button>
+        <button class="tab-btn" id="progress-tab" onclick="switchTab('progress')">2. View Progress</button>
+    </div>
+
+    <section id="practice-section" class="content-section active">
+        <div class="glass-card">
+            <label style="display:block; margin-bottom:10px; color:var(--neon-cyan); font-weight: bold;">Select Your Career Path:</label>
+            <select id="roleSelect" onchange="startSession()" style="padding:12px; width:100%; margin-bottom:20px; border-radius:10px; background:#000; color:white; border: 1px solid var(--neon-purple); font-size: 1em;">
+                <option value="">-- Choose Role --</option>
+                <option value="Software Engineer">Software Engineer</option>
+                <option value="Data Scientist">Data Scientist</option>
+                <option value="Product Manager">Product Manager</option>
+                <option value="UX Designer">UX Designer</option>
+                <option value="Marketing Analyst">Marketing Analyst</option>
+            </select>
+            
+            <h2 id="qText" style="min-height: 80px; font-size: 1.5em; line-height: 1.4;">Ready to start? Select a role above.</h2>
+            
+            <video id="webcam" autoplay muted></video>
+            
+            <div style="margin: 25px 0; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <button class="tab-btn" onclick="toggleCam()">📷 Toggle Webcam</button>
+                <button id="recBtn" class="btn-action" onclick="startRecording()">🎤 Start Recording</button>
+                <button id="nextBtn" class="btn-action" style="display:none; background:var(--neon-cyan); color:black" onclick="goToNext()">Next Question →</button>
+            </div>
+
+            <div class="transcript-box">
+                <p id="transcript" style="font-style:italic; color:var(--neon-cyan); margin:0;">Waiting for speech...</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="progress-section" class="content-section">
+        <div class="glass-card">
+            <h2 style="color:var(--neon-cyan); margin-bottom:30px;">Detailed Performance Analytics</h2>
+            
+            <div style="position: relative; height:350px; width:100%; background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                <canvas id="perfChart"></canvas>
+            </div>
+            
+            <div style="margin-top:40px; display:flex; justify-content: space-around; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;">
+                <div>
+                    <h3 style="color: var(--text-dim)">Avg Confidence Score</h3>
+                    <h1 id="finalScore" style="color:var(--neon-cyan); font-size: 3.5em; margin: 10px 0;">0.0</h1>
+                    <small style="color: var(--text-dim)">Out of 10</small>
+                </div>
+                <div>
+                    <h3 style="color: var(--text-dim)">Hiring Decision</h3>
+                    <h1 id="finalStatus" style="color:var(--neon-purple); font-size: 2.5em; margin: 10px 0;">N/A</h1>
+                </div>
+            </div>
+
+            <div style="margin-top:40px; text-align:left; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;">
+                <h3 style="color:var(--neon-cyan); margin-bottom: 15px;">💡 AI Personalized Feedback:</h3>
+                <ul id="mistakesList" style="color:#ff4d4d; font-weight:bold; line-height:1.6;">
+                    <li style="color: var(--text-dim); border-left: 4px solid #444; background: transparent;">Complete the 5-question interview to generate your feedback report.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

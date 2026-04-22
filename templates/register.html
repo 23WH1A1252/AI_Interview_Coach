@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | AI Driven Interview Coach</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --primary: #6c63ff; --neon-cyan: #00f2ff; --bg: #0f0f1b; --card-bg: #1a1a2e; }
+        body { background: var(--bg); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; color: white; }
+        .auth-card { background: var(--card-bg); padding: 40px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); width: 480px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.7); }
+        .brand-header { display: flex; justify-content: center; gap: 8px; font-size: 1.7em; font-weight: 800; margin-bottom: 5px; white-space: nowrap; }
+        .brand-ai { color: white; }
+        .brand-coach { color: var(--primary); }
+        .sub-tag { color: #7a7a9a; margin-bottom: 25px; display: block; font-size: 0.95em; }
+        label { display: block; text-align: left; color: #a0a0c0; font-weight: 600; margin-top: 15px; font-size: 0.9em; }
+        
+        .password-wrapper { position: relative; width: 100%; display: flex; align-items: center; margin-top: 8px; }
+        input { width: 100%; padding: 14px; border: 1px solid #333; border-radius: 12px; background: #000; color: white; font-size: 1em; outline: none; }
+        
+        .toggle-btn {
+            position: absolute;
+            right: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            z-index: 10;
+        }
+
+        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1.1em; margin-top: 30px; }
+        .footer-text { color: #a0a0c0; margin-top: 25px; display: block; }
+        .footer-text a { color: var(--neon-cyan); text-decoration: none; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <div class="brand-header">
+            <span class="brand-ai">AI Driven</span> <span class="brand-coach">Interview Coach</span>
+        </div>
+        <span class="sub-tag">Create your account to start practicing</span>
+        
+        <form action="/register" method="POST">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="name@company.com" required>
+
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Choose a username" required>
+            
+            <label>Password</label>
+            <div class="password-wrapper">
+                <input type="password" name="password" id="regPass" placeholder="Enter password" required>
+                <button type="button" class="toggle-btn" id="toggleReg">
+                    <i id="regIcon" data-lucide="eye"></i>
+                </button>
+            </div>
+            
+            <button type="submit" class="btn">Register Account</button>
+        </form>
+        <span class="footer-text">Already have an account? <a href="/login">Login here</a></span>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        const toggleBtn = document.getElementById('toggleReg');
+        const passInput = document.getElementById('regPass');
+        const icon = document.getElementById('regIcon');
+
+        toggleBtn.addEventListener('click', function() {
+            // Toggle type
+            const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passInput.setAttribute('type', type);
+            
+            // Toggle Icon Name
+            const iconName = type === 'password' ? 'eye' : 'eye-off';
+            icon.setAttribute('data-lucide', iconName);
+            
+            // Force Lucide to re-render the specific icon
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
