@@ -1,0 +1,140 @@
+/* --- Modern Neon Theme Variables --- */
+:root {
+    --bg-deep: #0f0f1b;
+    --card-bg: #1a1a2e;
+    --neon-purple: #6c63ff;
+    --neon-cyan: #00f2ff;
+    --text-white: #f0f0f5;
+    --text-dim: #9494a8;
+    --error-red: #ff4d4d;
+}
+
+/* --- General Layout --- */
+body {
+    font-family: 'DM Sans', 'Segoe UI', sans-serif;
+    background-color: var(--bg-deep);
+    color: var(--text-white);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- Navigation --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: var(--card-bg);
+    border-bottom: 2px solid var(--neon-purple);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* --- Cards & Sections --- */
+.glass-card {
+    background: var(--card-bg);
+    padding: 35px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    margin-bottom: 25px;
+}
+
+/* --- Webcam Styling --- */
+#webcam {
+    width: 100%;
+    max-width: 550px;
+    border-radius: 18px;
+    border: 3px solid var(--neon-purple);
+    background: #000;
+    transform: scaleX(-1); /* Mirror view */
+    margin: 20px auto;
+    box-shadow: 0 0 20px rgba(108, 99, 255, 0.2);
+}
+
+/* --- Buttons --- */
+.btn-action {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    background: var(--neon-purple);
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
+}
+
+/* Recording State (Red Pulse) */
+.btn-stop-active {
+    background: var(--error-red) !important;
+    animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 77, 77, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
+}
+
+/* --- Transcript Area --- */
+.transcript-box {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid var(--neon-cyan);
+    margin-top: 25px;
+    min-height: 60px;
+    color: var(--neon-cyan);
+    font-style: italic;
+    text-align: left;
+}
+
+/* --- Form Elements --- */
+select {
+    background: #0a0a14;
+    color: white;
+    border: 1px solid var(--neon-purple);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+}
+
+/* --- Progress Stats --- */
+.stat-box {
+    text-align: center;
+    padding: 20px;
+}
+
+.stat-value {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--neon-cyan);
+    margin: 0;
+}
+
+h3 {
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+/* --- Transitions --- */
+.content-section {
+    transition: opacity 0.4s ease-in-out;
+}
